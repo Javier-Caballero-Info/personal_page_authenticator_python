@@ -1,0 +1,364 @@
+---
+swagger: "2.0"
+info:
+  description: ""
+  version: "1.0.0"
+  title: "Authetication Server for Personal Page Admin"
+  contact:
+    email: "javierhernan@caballerogarcia.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "localhost:3000"
+basePath: "/v1"
+tags:
+- name: "session"
+  description: "Session management"
+- name: "user"
+  description: "Operations about user"
+schemes:
+- "http"
+- "https"
+paths:
+  /session:
+    post:
+      tags:
+      - "session"
+      summary: "Create Session"
+      description: ""
+      operationId: "create_session"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Created a session"
+        required: true
+        schema:
+          $ref: "#/definitions/Credentials"
+      responses:
+        201:
+          description: "Created user object"
+          schema:
+            $ref: "#/definitions/AccessToken"
+        400:
+          description: "Invalid username/password supplied"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+      x-swagger-router-controller: "swagger_server.controllers.session_controller"
+    put:
+      tags:
+      - "session"
+      summary: "Update Session"
+      description: ""
+      operationId: "update_session"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        201:
+          description: "Created user object"
+          schema:
+            $ref: "#/definitions/AccessTokenRefreshed"
+        400:
+          description: "Invalid refresh token"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "swagger_server.controllers.session_controller"
+  /users:
+    get:
+      tags:
+      - "user"
+      summary: "List all users"
+      description: ""
+      operationId: "list_users"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/UserWithOutPassword"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "swagger_server.controllers.user_controller"
+    post:
+      tags:
+      - "user"
+      summary: "Create user"
+      description: "This can only be done by the logged in user."
+      operationId: "create_user"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Created user object"
+        required: true
+        schema:
+          $ref: "#/definitions/UserWithOutId"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/UserWithOutPassword"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "swagger_server.controllers.user_controller"
+  /users/createWithList:
+    post:
+      tags:
+      - "user"
+      summary: "Creates list of users with given an array"
+      description: ""
+      operationId: "create_users_with_list_input"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "List of user object"
+        required: true
+        schema:
+          type: "array"
+          items:
+            $ref: "#/definitions/UserWithOutId"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/UserWithOutPassword"
+        400:
+          description: "Invalid operation"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "swagger_server.controllers.user_controller"
+  /me:
+    get:
+      tags:
+      - "user"
+      summary: "Get user by user token"
+      description: ""
+      operationId: "get_my_user"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/UserWithOutPassword"
+        400:
+          description: "Invalid id supplied"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        404:
+          description: "User not found"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "swagger_server.controllers.user_controller"
+  /users/{id}:
+    get:
+      tags:
+      - "user"
+      summary: "Get user by user id"
+      description: ""
+      operationId: "get_one_user"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: ""
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/UserWithOutPassword"
+        400:
+          description: "Invalid id supplied"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        404:
+          description: "User not found"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "swagger_server.controllers.user_controller"
+    put:
+      tags:
+      - "user"
+      summary: "Updated user"
+      description: "This can only be done by the logged in user."
+      operationId: "update_user"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "name that need to be updated"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Updated user object"
+        required: true
+        schema:
+          $ref: "#/definitions/UserWithOutId"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/UserWithOutPassword"
+        400:
+          description: "Invalid user supplied"
+        404:
+          description: "User not found"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "swagger_server.controllers.user_controller"
+    delete:
+      tags:
+      - "user"
+      summary: "Delete user"
+      description: "This can only be done by the logged in user."
+      operationId: "delete_user"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+        400:
+          description: "Invalid username supplied"
+        404:
+          description: "User not found"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "swagger_server.controllers.user_controller"
+securityDefinitions:
+  Bearer:
+    description: "For accessing the API a valid token must be passed in all the queries.\
+      \ The following syntax must be used in the 'Authorization' header :\n\n    Bearer:\
+      \ xxxxxx.yyyyyyy.zzzzzz\n"
+    type: "apiKey"
+    name: "Authorization"
+    in: "header"
+definitions:
+  User:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      username:
+        type: "string"
+      firstName:
+        type: "string"
+      lastName:
+        type: "string"
+      email:
+        type: "string"
+      password:
+        type: "string"
+    example:
+      firstName: "User"
+      lastName: "User"
+      password: "12345678"
+      id: "id"
+      email: "user@user.com"
+      username: "username"
+  ApiResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+      message:
+        type: "string"
+  AccessTokenRefreshed:
+    properties:
+      message:
+        type: "string"
+      access_token:
+        type: "string"
+    example:
+      access_token: "access_token"
+      message: "message"
+  Credentials:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+      password:
+        type: "string"
+    example:
+      password: "password"
+      username: "username"
+  AccessToken:
+    properties:
+      message:
+        type: "string"
+      access_token:
+        type: "string"
+      refresh_token:
+        type: "string"
+    example:
+      access_token: "access_token"
+      refresh_token: "refresh_token"
+      message: "message"
+  UserWithOutPassword:
+    properties:
+      id:
+        type: "string"
+      username:
+        type: "string"
+      firstName:
+        type: "string"
+      lastName:
+        type: "string"
+      email:
+        type: "string"
+    example:
+      firstName: "User"
+      lastName: "User"
+      password: "12345678"
+      email: "user@user.com"
+      username: "username"
+  UserWithOutId:
+    properties:
+      username:
+        type: "string"
+      firstName:
+        type: "string"
+      lastName:
+        type: "string"
+      email:
+        type: "string"
+      password:
+        type: "string"
+    example:
+      firstName: "firstName"
+      lastName: "lastName"
+      password: "password"
+      email: "email"
+      username: "username"

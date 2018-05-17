@@ -1,0 +1,18 @@
+Flask-API
+python_dateutil == 2.6.0
+setuptools >= 21.0.0
+
+cryptography==1.7.2
+PyJWT==1.5.3
+Flask-Cors==3.0.3
+Flask-JWT-Extended==3.3.4
+
+jsonschema==2.6.0
+packaging==16.8
+pycodestyle==2.3.1
+pyparsing==2.2.0
+simplejson==3.10.0
+six==1.10.0
+
+
+connexion == 1.1.15
