@@ -63,7 +63,7 @@ paths:
         400:
           description: "Invalid refresh token"
           schema:
-            $ref: "#/definitions/ApiResponse"
+            $ref: "#/definitions/InvalidToken"
       security:
       - Bearer: []
       x-swagger-router-controller: "swagger_server.controllers.session_controller"
@@ -344,6 +344,12 @@ definitions:
       password: "12345678"
       email: "user@user.com"
       username: "username"
+  InvalidToken:
+    properties:
+      msg:
+        type: "string"
+    example:
+      msg: "Bad Authorization header. Expected value 'Bearer <JWT>'"
   UserWithOutId:
     properties:
       username:

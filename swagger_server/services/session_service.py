@@ -6,9 +6,9 @@ class SessionService:
     @staticmethod
     def authenticate(credential):
 
-        if credential.username == 'admin' and credential.password == 'admin' :
-            access_token = create_access_token(identity = credential.username)
-            refresh_token = create_refresh_token(identity = credential.username)
+        if credential.username == 'admin' and credential.password == 'admin':
+            access_token = create_access_token(identity=credential.username)
+            refresh_token = create_refresh_token(identity=credential.username)
             return {
                     'message': 'Logged in as {}'.format(credential.username),
                     'access_token': access_token,
@@ -16,3 +16,13 @@ class SessionService:
                 }
         else:
             return None
+
+    @staticmethod
+    def renew_token(identity):
+
+        access_token = create_access_token(identity=identity)
+
+        return {
+            'message': 'Logged in as {}'.format(identity),
+            'access_token': access_token
+        }

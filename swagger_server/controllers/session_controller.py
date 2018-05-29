@@ -1,6 +1,7 @@
 import connexion
 import six
 import jsonschema
+from flask_jwt_extended import jwt_refresh_token_required, get_jwt_identity
 
 from swagger_server.models.access_token import AccessToken  # noqa: E501
 from swagger_server.models.access_token_refreshed import AccessTokenRefreshed  # noqa: E501
@@ -12,7 +13,7 @@ from swagger_server.utils.response_helper import ResponseHelper
 from swagger_server.utils.schema_validator import SchemaValidator
 
 
-def create_session(body):  # noqa: E501
+def create_session():  # noqa: E501
     """Create Session
 
      # noqa: E501
@@ -33,7 +34,7 @@ def create_session(body):  # noqa: E501
 
             token = SessionService.authenticate(body)
 
-            if token != None:
+            if token is not None:
                 return ResponseHelper.response_201(token)
             else:
                 return ResponseHelper.response_400('Wrong credentials')
@@ -42,6 +43,8 @@ def create_session(body):  # noqa: E501
         print(e)
         return ResponseHelper.response_400('Wrong credentials')
 
+
+@jwt_refresh_token_required
 def update_session():  # noqa: E501
     """Update Session
 
@@ -50,4 +53,11 @@ def update_session():  # noqa: E501
 
     :rtype: AccessTokenRefreshed
     """
-    return 'do some magic!'
+
+    try:
+
+        return SessionService.renew_token(get_jwt_identity())
+
+    except KeyError:
+
+        return ResponseHelper.response_400('Missing refresh token')

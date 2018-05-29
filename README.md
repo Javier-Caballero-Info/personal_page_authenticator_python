@@ -15,7 +15,7 @@ To run the server, please execute the following from the root directory:
 
 ```
 virtualenv -p python3 venv
-venv/bin/activate
+source venv/bin/activate
 pip3 install -r requirements.txt
 python3 -m swagger_server
 ```
