@@ -1,10 +1,10 @@
 import connexion
 import jsonschema
-import json
 from flask_api import status
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from swagger_server.models import User, ApiResponse
+from swagger_server.models.password import Password
 from swagger_server.utils.schema_validator import SchemaValidator
 from swagger_server.services.user_service import UserService
 from swagger_server.utils.response_helper import ResponseHelper
@@ -96,6 +96,31 @@ def delete_user(id):
             return ResponseHelper.response_406('Must exists at least one user')
     else:
         return ResponseHelper.response_404('User not found')
+
+
+@jwt_required
+def change_password():
+    try:
+
+        if connexion.request.is_json:
+
+            SchemaValidator.validate_password_schema(connexion.request.get_json())
+
+            body = Password.from_dict(connexion.request.get_json())
+
+            if body.password == body.password_confirmation:
+
+                result = UserService.change_password(get_jwt_identity(), body.password)
+
+                if result is not None:
+                    return ResponseHelper.response_204()
+                else:
+                    return ResponseHelper.response_400('Something went wrong')
+            else:
+                return ResponseHelper.response_400("Passwords don't match")
+
+    except jsonschema.exceptions.ValidationError as e:
+        return ResponseHelper.response_400(e.message)
 
 
 @jwt_required

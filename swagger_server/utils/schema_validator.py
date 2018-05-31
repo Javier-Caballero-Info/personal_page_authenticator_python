@@ -22,3 +22,9 @@ class SchemaValidator(object):
         schema = SchemaValidator._get_schema('user')
 
         return jsonschema.validate(data, schema)
+
+    @staticmethod
+    def validate_password_schema(data):
+        schema = SchemaValidator._get_schema('password')
+
+        return jsonschema.validate(data, schema)

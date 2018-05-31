@@ -168,6 +168,36 @@ paths:
       security:
       - Bearer: []
       x-swagger-router-controller: "swagger_server.controllers.user_controller"
+  /password:
+    put:
+      tags:
+      - "user"
+      summary: "Change user password"
+      description: ""
+      operationId: "change_password"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Password and password confirmation"
+        required: true
+        schema:
+          $ref: "#/definitions/Password"
+      responses:
+        204:
+          description: "successful operation"
+        400:
+          description: "Invalid id supplied"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        404:
+          description: "User not found"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "swagger_server.controllers.user_controller"
   /users/{id}:
     get:
       tags:
@@ -248,7 +278,7 @@ paths:
         required: true
         type: "string"
       responses:
-        200:
+        204:
           description: "successful operation"
         400:
           description: "Invalid username supplied"
@@ -355,6 +385,15 @@ definitions:
         type: "string"
     example:
       msg: "Bad Authorization header. Expected value 'Bearer <JWT>'"
+  Password:
+    properties:
+      password:
+        type: "string"
+      password_confirmation:
+        type: "string"
+    example:
+      password: "12345678"
+      password_confirmation: "12345678"
   UserWithOutId:
     properties:
       username:

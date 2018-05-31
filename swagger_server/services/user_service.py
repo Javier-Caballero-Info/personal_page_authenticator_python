@@ -66,6 +66,18 @@ class UserService:
         return UserService.get_by_id(key)
 
     @staticmethod
+    def change_password(key, new_pass) -> 'User':
+
+        result: User = FirebaseService.get(UserService._PATH + '/' + key)
+
+        if result:
+            result['password'] = User.hash_password(new_pass)
+            FirebaseService.edit(UserService._PATH + '/' + key, result)
+            return User.from_dict(result)
+        else:
+            return None
+
+    @staticmethod
     def remove(key):
 
         return FirebaseService.remove(UserService._PATH + '/' + key)
