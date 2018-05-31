@@ -1,120 +1,151 @@
 import connexion
-import six
-from flask_jwt_extended import jwt_required
+import jsonschema
+import json
+from flask_api import status
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
-from swagger_server.models.api_response import ApiResponse  # noqa: E501
-from swagger_server.models.user_with_out_id import UserWithOutId  # noqa: E501
-from swagger_server.models.user_with_out_password import UserWithOutPassword  # noqa: E501
-from swagger_server import util
+from swagger_server.models import User, ApiResponse
+from swagger_server.utils.schema_validator import SchemaValidator
+from swagger_server.services.user_service import UserService
 from swagger_server.utils.response_helper import ResponseHelper
 
 
 @jwt_required
-def create_user(body):  # noqa: E501
-    """Create user
+def create_user():
+    try:
 
-    This can only be done by the logged in user. # noqa: E501
+        if connexion.request.is_json:
 
-    :param body: Created user object
-    :type body: dict | bytes
+            SchemaValidator.validate_user_schema(connexion.request.get_json())
 
-    :rtype: UserWithOutPassword
-    """
+            body = User.from_dict(connexion.request.get_json())
+
+            other_user = UserService.get_by_username(body.username)
+
+            if other_user is None:
+
+                result = UserService.create(body)
+
+                if result is not None:
+                    return ResponseHelper.response_201(result.to_json())
+                else:
+                    return ResponseHelper.response_400('Something went wrong')
+            else:
+                return ResponseHelper.response_400('Username already taken')
+
+    except jsonschema.exceptions.ValidationError as e:
+        return ResponseHelper.response_400(e.message)
+
+
+@jwt_required
+def create_users_with_list_input():
+
     if connexion.request.is_json:
-        body = UserWithOutId.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+
+        users = [User.from_dict(d) for d in connexion.request.get_json()]
+
+        result = []
+
+        for u in users:
+            try:
+                SchemaValidator.validate_user_schema(u.to_json(show_id=False, show_password=True))
+                other_user = UserService.get_by_username(u.username)
+
+                if other_user is None:
+
+                    new_user = UserService.create(u)
+
+                    if result is not None:
+                        result.append(ApiResponse(
+                            status.HTTP_200_OK,
+                            'Ok',
+                            new_user.id
+                        ))
+                    else:
+                        result.append(ApiResponse(
+                            status.HTTP_400_BAD_REQUEST,
+                            'BAD_REQUEST',
+                            'Something went wrong'
+                        ))
+                else:
+                    result.append(ApiResponse(
+                        status.HTTP_400_BAD_REQUEST,
+                        'BAD_REQUEST',
+                        'Username already taken'
+                    ))
+            except jsonschema.exceptions.ValidationError as e:
+                result.append(ApiResponse(
+                    status.HTTP_400_BAD_REQUEST,
+                    'BAD_REQUEST',
+                    e.message
+                ))
+
+        return ResponseHelper.response_200(result)
 
 
 @jwt_required
-def create_users_with_list_input(body):  # noqa: E501
-    """Creates list of users with given an array
+def delete_user(id):
 
-     # noqa: E501
+    result = UserService.get_by_id(id)
 
-    :param body: List of user object
-    :type body: list | bytes
-
-    :rtype: List[UserWithOutPassword]
-    """
-    if connexion.request.is_json:
-        body = [UserWithOutId.from_dict(d) for d in connexion.request.get_json()]  # noqa: E501
-    return 'do some magic!'
-
-
-@jwt_required
-def delete_user(id):  # noqa: E501
-    """Delete user
-
-    This can only be done by the logged in user. # noqa: E501
-
-    :param id: 
-    :type id: str
-
-    :rtype: None
-    """
-    return 'do some magic!'
+    if result is not None:
+        if len(UserService.get_all()) > 1:
+            UserService.remove(id)
+            return ResponseHelper.response_204()
+        else:
+            return ResponseHelper.response_406('Must exists at least one user')
+    else:
+        return ResponseHelper.response_404('User not found')
 
 
 @jwt_required
-def get_my_user():  # noqa: E501
-    """Get user by user token
+def get_my_user():
+    result = UserService.get_by_id(get_jwt_identity())
 
-     # noqa: E501
-
-
-    :rtype: UserWithOutPassword
-    """
-
-    u = UserWithOutPassword(
-        id='USER_01',
-        username='caballerojavier13',
-        first_name='Javier',
-        last_name='Caballero',
-        email='caballerojavier13@gmail.com'
-    )
-
-    return ResponseHelper.response_200(u)
+    if result is not None:
+        return ResponseHelper.response_200(result.to_json())
+    else:
+        return ResponseHelper.response_404('User not found')
 
 
 @jwt_required
-def get_one_user(id):  # noqa: E501
-    """Get user by user id
+def get_one_user(id):
+    result = UserService.get_by_id(id)
 
-     # noqa: E501
-
-    :param id: 
-    :type id: str
-
-    :rtype: UserWithOutPassword
-    """
-    return 'do some magic!'
+    if result is not None:
+        return ResponseHelper.response_200(result.to_json())
+    else:
+        return ResponseHelper.response_404('User not found')
 
 
 @jwt_required
-def list_users():  # noqa: E501
-    """List all users
+def list_users():
 
-     # noqa: E501
-
-
-    :rtype: List[UserWithOutPassword]
-    """
-    return 'do some magic!'
+    return ResponseHelper.response_200(list(map(lambda x: x.to_json(), UserService.get_all())))
 
 
 @jwt_required
-def update_user(id, body):  # noqa: E501
-    """Updated user
+def update_user(id):
+    try:
 
-    This can only be done by the logged in user. # noqa: E501
+        if connexion.request.is_json:
 
-    :param id: name that need to be updated
-    :type id: str
-    :param body: Updated user object
-    :type body: dict | bytes
+            SchemaValidator.validate_user_schema(connexion.request.get_json())
 
-    :rtype: UserWithOutPassword
-    """
-    if connexion.request.is_json:
-        body = UserWithOutId.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+            body = User.from_dict(connexion.request.get_json())
+
+            other_user = UserService.get_by_username(body.username)
+
+            if other_user is None or other_user.id == id:
+
+                result = UserService.edit(id, body)
+
+                if result is not None:
+                    return ResponseHelper.response_200(result.to_json())
+                else:
+                    return ResponseHelper.response_404('User not found')
+            else:
+                return ResponseHelper.response_400('Username already taken')
+
+    except jsonschema.exceptions.ValidationError as e:
+        return ResponseHelper.response_400(e.message)

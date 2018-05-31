@@ -225,7 +225,10 @@ paths:
           schema:
             $ref: "#/definitions/UserWithOutPassword"
         400:
-          description: "Invalid user supplied"
+        400:
+          description: "Invalid request"
+          schema:
+            $ref: "#/definitions/ApiResponse"
         404:
           description: "User not found"
       security:
@@ -276,6 +279,7 @@ definitions:
         type: "string"
       email:
         type: "string"
+        format: "email"
       password:
         type: "string"
     example:
@@ -338,6 +342,7 @@ definitions:
         type: "string"
       email:
         type: "string"
+        format: "email"
     example:
       firstName: "User"
       lastName: "User"
@@ -360,6 +365,7 @@ definitions:
         type: "string"
       email:
         type: "string"
+        format: "email"
       password:
         type: "string"
     example:

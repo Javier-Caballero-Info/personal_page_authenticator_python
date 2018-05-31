@@ -1,17 +1,24 @@
 import jsonschema
 import simplejson as json
 
+
 class SchemaValidator(object):
 
-	@staticmethod
-	def _get_schema(schema_name):
-		with open('./swagger_server/schemas/%s.json' % schema_name, 'r') as f:
-		    schema_data = f.read()
-			
-		return json.loads(schema_data)
+    @staticmethod
+    def _get_schema(schema_name):
+        with open('./swagger_server/schemas/%s.json' % schema_name, 'r') as f:
+            schema_data = f.read()
 
-	@staticmethod
-	def validateCredentialSchema(data):
-		schema = SchemaValidator._get_schema('credentials')
+        return json.loads(schema_data)
 
-		return jsonschema.validate(data, schema)
+    @staticmethod
+    def validate_credential_schema(data):
+        schema = SchemaValidator._get_schema('credential')
+
+        return jsonschema.validate(data, schema)
+
+    @staticmethod
+    def validate_user_schema(data):
+        schema = SchemaValidator._get_schema('user')
+
+        return jsonschema.validate(data, schema)

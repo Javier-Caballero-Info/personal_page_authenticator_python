@@ -1,9 +1,10 @@
 # coding: utf-8
 
 from __future__ import absolute_import
-from datetime import date, datetime  # noqa: F401
 
-from typing import List, Dict  # noqa: F401
+import hashlib
+import json
+import uuid
 
 from swagger_server.models.base_model_ import Model
 from swagger_server import util
@@ -43,8 +44,8 @@ class User(Model):
         self.attribute_map = {
             'id': 'id',
             'username': 'username',
-            'first_name': 'firstName',
-            'last_name': 'lastName',
+            'first_name': 'first_name',
+            'last_name': 'last_name',
             'email': 'email',
             'password': 'password'
         }
@@ -65,7 +66,20 @@ class User(Model):
         :return: The User of this User.  # noqa: E501
         :rtype: User
         """
+
         return util.deserialize_model(dikt, cls)
+
+    def to_json(self, show_id=True, show_password=False):
+
+        dikt = self.to_dict()
+
+        if not show_password and 'password' in dikt.keys():
+            del dikt['password']
+
+        if not show_id and 'id' in dikt.keys():
+            del dikt['id']
+
+        return dikt
 
     @property
     def id(self) -> str:
@@ -192,3 +206,12 @@ class User(Model):
         """
 
         self._password = password
+
+    @staticmethod
+    def hash_password(password):
+        salt = uuid.uuid4().hex
+        return hashlib.sha256(salt.encode() + password.encode()).hexdigest() + ':' + salt
+
+    def check_password(self, password_to_check):
+        password, salt = self._password.split(':')
+        return password == hashlib.sha256(salt.encode() + password_to_check.encode()).hexdigest()
