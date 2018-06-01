@@ -9,10 +9,10 @@
 -   [Clone](https://github.com/Javier-Caballero-Info/personal_page_authenticator_python/tree/master/README.md#clone)
 - [Requirements](https://github.com/Javier-Caballero-Info/personal_page_authenticator_python/tree/master#requirements)
 - [Installation](https://github.com/Javier-Caballero-Info/personal_page_authenticator_python/tree/master#installation)
-	- [Pyhton 3](https://github.com/Javier-Caballero-Info/personal_page_authenticator_python/tree/master#nodejs-and-npm)
-	- [Virtual environments - pyenv (Linux/MacOS)](https://github.com/Javier-Caballero-Info/personal_page_authenticator_python/tree/master#nodejs-and-npm)
-	- [Creation of virtualenv (Linux/Mac)](https://github.com/Javier-Caballero-Info/personal_page_authenticator_python/tree/master#nodejs-and-npm)
-	- [Dependencies (All)](https://github.com/Javier-Caballero-Info/personal_page_authenticator_python/tree/master#dependencies)
+	- [Pyhton 3](https://github.com/Javier-Caballero-Info/personal_page_authenticator_python/tree/master#pyhton-3)
+	- [Virtual environments - pyenv (Linux/MacOS)](https://github.com/Javier-Caballero-Info/personal_page_authenticator_python/tree/master#virtual-environments---pyenv-linuxmacos)
+	- [Creation of virtualenv (Linux/Mac)](https://github.com/Javier-Caballero-Info/personal_page_authenticator_python/tree/master#creation-of-virtualenv-linuxmac)
+	- [Dependencies (All)](https://github.com/Javier-Caballero-Info/personal_page_authenticator_python/tree/master#dependencies-all)
 - [Environment](https://github.com/Javier-Caballero-Info/personal_page_authenticator_python/tree/master#environment)
 - [Developing](https://github.com/Javier-Caballero-Info/personal_page_authenticator_python/tree/master#developing)
 - [Test](https://github.com/Javier-Caballero-Info/personal_page_authenticator_python/tree/master#test)
@@ -30,7 +30,7 @@ This API has the responsibility of manage all the user information and control t
 
 ## API Description
 
-For more information about the endpoints of the API please check the [apiary doc](https://personalpageadminnodejs.docs.apiary.io).
+For more information about the endpoints of the API please check the [apiary doc](https://personalpageauthenticatorpython.docs.apiary.io).
 
 ## Clone
 
