@@ -9,7 +9,6 @@ info:
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "localhost:3000"
 basePath: "/v1"
 tags:
 - name: "session"
@@ -254,7 +253,6 @@ paths:
           description: "successful operation"
           schema:
             $ref: "#/definitions/UserWithOutPassword"
-        400:
         400:
           description: "Invalid request"
           schema:
