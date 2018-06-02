@@ -138,7 +138,8 @@ Export the following environment variables:
 
 ```bash
 PORT=3000
-SECRET=secret # Secret key for JWT
+SECRET_KEY=secret # Secret key
+JWT_SECRET_KEY=secret # Secret key for jwt
 
 # Firebase Credentials
 DATABASE_URL=db.firebase.com # Url for Firebase database
