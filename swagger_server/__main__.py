@@ -26,7 +26,7 @@ def main():
     except KeyError:
         jwt_secret_key = 'jwt-secret-string'
 
-    app.app.config['JWT_SECRET_KEY'] = jwt_secret_key
+    app.app.config['JWT_PRIVATE_KEY'] = jwt_secret_key
 
     try:
         jwt_algorithm = os.environ['JWT_SIGN_ALGORITHM']
