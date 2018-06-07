@@ -14,9 +14,9 @@ def main():
     app = connexion.FlaskApp(__name__, specification_dir='./swagger/')
     app.app.json_encoder = JSONEncoder
     app.add_api('swagger.yaml', arguments={'title': 'Authentication Server for Personal Page Admin'})
-    app.app.config['SECRET_KEY'] = 'some-secret-string'
-    app.app.config['JWT_SECRET_KEY'] = 'jwt-secret-string'
-    app.app.config['JWT_ALGORITHM'] = 'HS384'
+    app.app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
+    app.app.config['JWT_SECRET_KEY'] = os.environ['JWT_SECRET_KEY']
+    app.app.config['JWT_ALGORITHM'] = os.environ['JWT_SIGN_ALGORITHM']
 
     JWTManager(app.app)
 
