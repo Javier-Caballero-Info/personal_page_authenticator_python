@@ -1,4 +1,4 @@
-from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
+from flask_jwt_extended import (create_access_token, create_refresh_token)
 
 from swagger_server.models import User
 from swagger_server.services.user_service import UserService

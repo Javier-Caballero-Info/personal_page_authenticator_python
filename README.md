@@ -138,7 +138,7 @@ Export the following environment variables:
 
 ```bash
 PORT=3000
-SECRET_KEY=secret # Secret key
+JWT_SIGN_ALGORITHM=HS256 # Signature to validate the JWT token Only HS* algorithms
 JWT_SECRET_KEY=secret # Secret key for jwt
 
 # Firebase Credentials
@@ -185,8 +185,8 @@ docker build -t personal_page_authenticator_python .
 ### Starting up a container
 ```bash
 docker run -p 3000:3000 -d \
--e SECRET_KEY="some-secret-string" \
 -e JWT_SECRET_KEY="jwt-secret-string" \
+-e JWT_SIGN_ALGORITHM="HS256" \
 -e DATABASE_URL="db.firebase.com" \
 -e DB_PRIVATE_KEY_ID="secret_id" \
 -e DB_PRIVATE_KEY="secret" \
