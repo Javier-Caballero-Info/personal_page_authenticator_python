@@ -27,7 +27,9 @@ class SessionService:
 
         access_token = create_access_token(identity=identity)
 
+        user: User = UserService.get_by_id(identity)
+
         return {
-            'message': 'Logged in as {}'.format(identity),
+            'message': 'Logged in as {}'.format(user.username),
             'access_token': access_token
         }

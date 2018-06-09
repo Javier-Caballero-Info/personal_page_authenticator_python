@@ -25,7 +25,6 @@ def create_session():
                 return ResponseHelper.response_400('Wrong credentials')
 
     except jsonschema.exceptions.ValidationError as e:
-        print(e)
         return ResponseHelper.response_400('Wrong credentials')
 
 
