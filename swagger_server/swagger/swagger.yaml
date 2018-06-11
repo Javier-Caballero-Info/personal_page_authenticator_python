@@ -100,7 +100,7 @@ paths:
         description: "Created user object"
         required: true
         schema:
-          $ref: "#/definitions/UserWithOutId"
+          $ref: "#/definitions/EditUserRequest"
       responses:
         200:
           description: "Successful operation"
@@ -315,6 +315,22 @@ definitions:
       lastName: "User"
       password: "12345678"
       id: "id"
+      email: "user@user.com"
+      username: "username"
+  EditUserRequest:
+    properties:
+      username:
+        type: "string"
+      firstName:
+        type: "string"
+      lastName:
+        type: "string"
+      email:
+        type: "string"
+        format: "email"
+    example:
+      firstName: "User"
+      lastName: "User"
       email: "user@user.com"
       username: "username"
   ApiResponse:

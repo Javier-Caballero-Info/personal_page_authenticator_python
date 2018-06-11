@@ -19,8 +19,6 @@ def main():
     except KeyError:
         jwt_secret_key = 'jwt-secret-string'
 
-    print(jwt_secret_key)
-
     app.app.config['JWT_SECRET_KEY'] = jwt_secret_key
 
     try:
@@ -29,8 +27,6 @@ def main():
         jwt_algorithm = 'HS384'
 
     app.app.config['JWT_ALGORITHM'] = jwt_algorithm
-
-    print(app.app.config)
 
     JWTManager(app.app)
 

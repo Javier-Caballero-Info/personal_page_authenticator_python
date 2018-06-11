@@ -16,7 +16,7 @@ def create_user():
 
         if connexion.request.is_json:
 
-            SchemaValidator.validate_user_schema(connexion.request.get_json())
+            SchemaValidator.validate_create_user_schema(connexion.request.get_json())
 
             body = User.from_dict(connexion.request.get_json())
 
@@ -48,7 +48,7 @@ def create_users_with_list_input():
 
         for u in users:
             try:
-                SchemaValidator.validate_user_schema(u.to_json(show_id=False, show_password=True))
+                SchemaValidator.validate_create_user_schema(u.to_json(show_id=False, show_password=True))
                 other_user = UserService.get_by_username(u.username)
 
                 if other_user is None:
@@ -151,26 +151,34 @@ def list_users():
 
 @jwt_required
 def update_user(id):
-    try:
 
-        if connexion.request.is_json:
+    result = UserService.get_by_id(id)
 
-            SchemaValidator.validate_user_schema(connexion.request.get_json())
+    if result is not None:
 
-            body = User.from_dict(connexion.request.get_json())
+        try:
 
-            other_user = UserService.get_by_username(body.username)
+            if connexion.request.is_json:
 
-            if other_user is None or other_user.id == id:
+                SchemaValidator.validate_edit_user_schema(connexion.request.get_json())
 
-                result = UserService.edit(id, body)
+                body = User.from_dict(connexion.request.get_json())
 
-                if result is not None:
-                    return ResponseHelper.response_200(result.to_json())
+                other_user = UserService.get_by_username(body.username)
+
+                if other_user is None or other_user.id == id:
+
+                    result = UserService.edit(id, body)
+
+                    if result is not None:
+                        return ResponseHelper.response_200(result.to_json())
+                    else:
+                        return ResponseHelper.response_404('User not found')
                 else:
-                    return ResponseHelper.response_404('User not found')
-            else:
-                return ResponseHelper.response_400('Username already taken')
+                    return ResponseHelper.response_400('Username already taken')
 
-    except jsonschema.exceptions.ValidationError as e:
-        return ResponseHelper.response_400(e.message)
+        except jsonschema.exceptions.ValidationError as e:
+            return ResponseHelper.response_400(e.message)
+
+    else:
+        return ResponseHelper.response_404('User not found')

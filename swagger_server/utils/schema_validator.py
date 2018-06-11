@@ -18,8 +18,14 @@ class SchemaValidator(object):
         return jsonschema.validate(data, schema)
 
     @staticmethod
-    def validate_user_schema(data):
-        schema = SchemaValidator._get_schema('user')
+    def validate_create_user_schema(data):
+        schema = SchemaValidator._get_schema('create_user')
+
+        return jsonschema.validate(data, schema)
+
+    @staticmethod
+    def validate_edit_user_schema(data):
+        schema = SchemaValidator._get_schema('edit_user')
 
         return jsonschema.validate(data, schema)
 
